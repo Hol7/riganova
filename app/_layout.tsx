@@ -1,105 +1,97 @@
-import { useAuthStore } from '@/store/authStore';
-import { Ionicons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { Slot } from "expo-router";
 
-export default function Layout() {
-  const { user } = useAuthStore();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: '#FFA704',
-        tabBarInactiveTintColor: '#002276',
-        headerShown: false,
-      }}
-    >
-      {user?.role === 'client' && (
-        <>
-          <Tabs.Screen
-            name="client/home"
-            options={{
-              title: 'Accueil',
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="home-outline" color={color} size={size} />
-              ),
-            }}
-          />
-          <Tabs.Screen
-            name="client/deliveries"
-            options={{
-              title: 'Mes Courses',
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="list-outline" color={color} size={size} />
-              ),
-            }}
-          />
-        </>
-      )}
-
-      {user?.role === 'livreur' && (
-        <Tabs.Screen
-          name="livreur/missions"
-          options={{
-            title: 'Missions',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="bicycle-outline" color={color} size={size} />
-            ),
-          }}
-        />
-      )}
-
-      {user?.role === 'manager' && (
-        <Tabs.Screen
-          name="manager/requests"
-          options={{
-            title: 'Demandes',
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="people-outline" color={color} size={size} />
-            ),
-          }}
-        />
-      )}
-
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profil',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" color={color} size={size} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+export default function RootLayout() {
+  return <Slot />;
 }
 
 
-// import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-// import { useFonts } from 'expo-font';
-// import { Stack } from 'expo-router';
-// import { StatusBar } from 'expo-status-bar';
-// import 'react-native-reanimated';
+// // // app/_layout.tsx
+// // import { Stack } from "expo-router";
 
-// import { useColorScheme } from '@/hooks/useColorScheme';
+// // export default function RootLayout() {
+// //   return (
+// //     <Stack screenOptions={{ headerShown: false }}>
+// //       {/* index.tsx sera notre routeur "intermédiaire" */}
+// //       <Stack.Screen name="index" options={{ headerShown: false }} />
+// //       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+// //       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+// //     </Stack>
+// //   );
+// // }
+
+// import { Slot } from "expo-router";
 
 // export default function RootLayout() {
-//   const colorScheme = useColorScheme();
-//   const [loaded] = useFonts({
-//     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-//   });
-
-//   if (!loaded) {
-//     // Async font loading only occurs in development.
-//     return null;
-//   }
-
-//   return (
-//     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-//       <Stack>
-//         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-//         <Stack.Screen name="+not-found" />
-//       </Stack>
-//       <StatusBar style="auto" />
-//     </ThemeProvider>
-//   );
+//   return <Slot />;
 // }
+
+
+// // // app/_layout.tsx
+// // import { useAuthStore } from "@/store/authStore";
+// // import { Stack, useRouter } from "expo-router";
+// // import * as SplashScreen from "expo-splash-screen";
+// // import { useEffect } from "react";
+
+// // SplashScreen.preventAutoHideAsync();
+
+// // export default function RootLayout() {
+// //   const { isLoading, isAuthenticated, role } = useAuthStore();
+// //   const router = useRouter();
+
+// //   useEffect(() => {
+// //     if (!isLoading) {
+// //       SplashScreen.hideAsync();
+// //       if (!isAuthenticated) {
+// //         router.replace("/(auth)/login");
+// //       } else {
+// //         // ✅ redirect based on role
+// //         if (role === "client") router.replace("/(tabs)/client/home");
+// //         if (role === "livreur") router.replace("/(tabs)/livreur/missions");
+// //         if (role === "manager") router.replace("/(tabs)/manager/requests");
+// //       }
+// //     }
+// //   }, [isLoading, isAuthenticated, role]);
+
+// //   // Always render a navigator
+// //   return (
+// //     <Stack screenOptions={{ headerShown: false }}>
+// //       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+// //       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+// //     </Stack>
+// //   );
+// // }
+
+
+// // // app/_layout.tsx
+// // import { useAuthStore } from "@/store/authStore";
+// // import { SplashScreen, Stack, useRouter } from "expo-router";
+// // import { useEffect } from "react";
+
+// // SplashScreen.preventAutoHideAsync();
+
+// // export default function RootLayout() {
+// //   const { isLoading, isAuthenticated } = useAuthStore();
+// //   const router = useRouter();
+
+// //   useEffect(() => {
+// //     if (!isLoading) {
+// //       SplashScreen.hideAsync();
+// //       if (!isAuthenticated) {
+// //         router.replace("/(auth)/login");
+// //       } else {
+// //         router.replace("/(tabs)/client/home"); // default tab after login
+// //       }
+// //     }
+// //   }, [isLoading, isAuthenticated]);
+
+// //   if (isLoading) {
+// //     return null; // could be a splash screen component
+// //   }
+
+// //   return (
+// //     <Stack screenOptions={{ headerShown: false }}>
+// //       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+// //       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+// //     </Stack>
+// //   );
+// // }

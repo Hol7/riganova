@@ -1,7 +1,9 @@
 export const COLORS = {
-    primary: '#FFA704', // orange
-    secondary: '#002276', // bleu foncé
-    white: '#FFFFFF',
-    gray: '#F2F2F2',
-  };
-  
+  primary: "#FFA704", // brand
+  secondary: "#002276",
+  bg: "#FFFFFF",
+  text: "#11181C",
+  textMuted: "#6B7280",
+  border: "#E5E7EB",
+  surface: "#F8FAFC",
+};

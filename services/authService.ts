@@ -1,15 +1,26 @@
-import axios from 'axios';
+import { api } from "./api";
 
-const api = axios.create({
-  baseURL: 'https://api.riganova.com',
-});
+export async function loginUser(telephone: string, mot_de_passe: string) {
+  const { data } = await api.post("/auth/login", { telephone, mot_de_passe });
+  console.log("data", data)
+  return data ;
+}
 
-export const registerUser = async (data: any) => {
-  const res = await api.post('/auth/register', data);
-  return res.data;
-};
+export async function registerUser(payload: {
+  nom: string;
+  email: string;
+  telephone: string;
+  mot_de_passe: string;
+  adresse: string;
+}) {
+  const { data } = await api.post("/auth/register", {
+    ...payload,
+    role: "client", // always default
+  });
+  return data;
+}
 
-export const loginUser = async (data: any) => {
-  const res = await api.post('/auth/login', data);
-  return res.data;
-};
+export async function forgetPassword(email: string) {
+  const { data } = await api.post(`/auth/forget-password?email=${encodeURIComponent(email)}`);
+  return data;
+}

@@ -1,23 +1,34 @@
-import { create } from 'zustand';
+import { loginUser } from "@/services/authService";
+import * as SecureStore from "expo-secure-store";
+import { create } from "zustand";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: 'client' | 'livreur' | 'manager' | 'admin';
-}
+type Role = "client" | "livreur" | "manager" | "admin";
 
-interface AuthState {
-  user: User | null;
+interface State {
+  isLoading: boolean;
+  isAuthenticated: boolean;
   token: string | null;
-  setUser: (user: User, token: string) => void;
-  logout: () => void;
+  role: Role | null;
+  me: any | null;
+  login: (telephone: string, mot_de_passe: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
+export const useAuthStore = create<State>((set) => ({
+  isLoading: false,
+  isAuthenticated: false,
   token: null,
-  setUser: (user, token) => set({ user, token }),
-  logout: () => set({ user: null, token: null }),
+  role: null,
+  me: null,
+
+  login: async (telephone, mot_de_passe) => {
+    const { access_token, user } = await loginUser(telephone, mot_de_passe);
+    await SecureStore.setItemAsync("access_token", access_token);
+    set({ token: access_token, me: user, role: user.role, isAuthenticated: true });
+  },
+
+  logout: async () => {
+    await SecureStore.deleteItemAsync("access_token");
+    set({ isAuthenticated: false, token: null, role: null, me: null });
+  },
 }));
