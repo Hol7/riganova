@@ -1,8 +1,20 @@
 import { registerUser } from "@/services/authService";
 import { useAuthStore } from "@/store/authStore";
-import { styles } from "@/theme/ui";
+import { COLORS } from "@/theme/colors";
+import { spacing } from "@/theme/ui";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
+import { 
+  ActivityIndicator, 
+  ScrollView, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform
+} from "react-native";
 
 export default function Register() {
   const [nom, setNom] = useState("");
@@ -13,6 +25,7 @@ export default function Register() {
   const [busy, setBusy] = useState(false);
 
   const login = useAuthStore((s) => s.login);
+  const router = useRouter();
 
   const onSubmit = async () => {
     if (!nom || !email || !telephone || !mot_de_passe || !adresse) {
@@ -23,8 +36,9 @@ export default function Register() {
       await registerUser({ nom, email, telephone, mot_de_passe, adresse });
       // ✅ directly log in after registration
       await login(telephone, mot_de_passe);
+      // Navigation will be handled by the index.tsx based on auth state
     } catch (e: any) {
-      console.log("ereuur",e);
+      console.log("erreur",e);
       alert("Échec de l'inscription: " + (e.response?.data?.detail || "Erreur inconnue"));
     } finally {
       setBusy(false);
@@ -32,47 +46,202 @@ export default function Register() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.screen}>
-      <Text style={styles.h2}>Créer un compte</Text>
+    <KeyboardAvoidingView 
+      style={registerStyles.container} 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView contentContainerStyle={registerStyles.scrollContainer}>
+        {/* Header */}
+        <View style={registerStyles.header}>
+          <Text style={registerStyles.logo}>RIGANOVA</Text>
+          <Text style={registerStyles.tagline}>Livraison à moto rapide</Text>
+        </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Nom complet"
-        value={nom}
-        onChangeText={setNom}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Téléphone"
-        keyboardType="phone-pad"
-        value={telephone}
-        onChangeText={setTelephone}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Adresse"
-        value={adresse}
-        onChangeText={setAdresse}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Mot de passe"
-        secureTextEntry
-        value={mot_de_passe}
-        onChangeText={setPassword}
-      />
+        {/* Form */}
+        <View style={registerStyles.form}>
+          <Text style={registerStyles.title}>Créer un compte</Text>
+          <Text style={registerStyles.subtitle}>
+            Rejoignez RIGANOVA et commencez à utiliser nos services de livraison
+          </Text>
 
-      <TouchableOpacity style={styles.primaryBtn} onPress={onSubmit} disabled={busy}>
-        {busy ? <ActivityIndicator /> : <Text style={styles.primaryBtnText}>S’inscrire</Text>}
-      </TouchableOpacity>
-    </ScrollView>
+          <View style={registerStyles.inputContainer}>
+            <Text style={registerStyles.inputLabel}>👤 Nom complet</Text>
+            <TextInput
+              style={registerStyles.input}
+              placeholder="Entrez votre nom complet"
+              value={nom}
+              onChangeText={setNom}
+              autoCapitalize="words"
+            />
+          </View>
+
+          <View style={registerStyles.inputContainer}>
+            <Text style={registerStyles.inputLabel}>📧 Email</Text>
+            <TextInput
+              style={registerStyles.input}
+              placeholder="Entrez votre adresse email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+
+          <View style={registerStyles.inputContainer}>
+            <Text style={registerStyles.inputLabel}>📱 Téléphone</Text>
+            <TextInput
+              style={registerStyles.input}
+              placeholder="Entrez votre numéro de téléphone"
+              keyboardType="phone-pad"
+              value={telephone}
+              onChangeText={setTelephone}
+            />
+          </View>
+
+          <View style={registerStyles.inputContainer}>
+            <Text style={registerStyles.inputLabel}>📍 Adresse</Text>
+            <TextInput
+              style={registerStyles.input}
+              placeholder="Entrez votre adresse complète"
+              value={adresse}
+              onChangeText={setAdresse}
+              multiline
+            />
+          </View>
+
+          <View style={registerStyles.inputContainer}>
+            <Text style={registerStyles.inputLabel}>🔒 Mot de passe</Text>
+            <TextInput
+              style={registerStyles.input}
+              placeholder="Créez un mot de passe sécurisé"
+              secureTextEntry
+              value={mot_de_passe}
+              onChangeText={setPassword}
+              autoCapitalize="none"
+            />
+          </View>
+
+          <TouchableOpacity 
+            style={[registerStyles.submitBtn, busy && registerStyles.submitBtnDisabled]} 
+            onPress={onSubmit} 
+            disabled={busy}
+          >
+            {busy ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={registerStyles.submitBtnText}>Créer mon compte</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {/* Login Link */}
+        <View style={registerStyles.footer}>
+          <Text style={registerStyles.footerText}>Déjà un compte ?</Text>
+          <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+            <Text style={registerStyles.footerLink}>Se connecter</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
+
+const registerStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.bg,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    padding: spacing(5),
+  },
+  header: {
+    alignItems: "center",
+    marginBottom: spacing(8),
+  },
+  logo: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    letterSpacing: 1,
+    marginBottom: spacing(2),
+  },
+  tagline: {
+    fontSize: 16,
+    color: COLORS.textMuted,
+    textAlign: "center",
+  },
+  form: {
+    marginBottom: spacing(6),
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: COLORS.text,
+    textAlign: "center",
+    marginBottom: spacing(2),
+  },
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.textMuted,
+    textAlign: "center",
+    marginBottom: spacing(8),
+    lineHeight: 22,
+  },
+  inputContainer: {
+    marginBottom: spacing(4),
+  },
+  inputLabel: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: COLORS.text,
+    marginBottom: spacing(2),
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.surface,
+    borderRadius: 12,
+    padding: spacing(4),
+    fontSize: 16,
+    color: COLORS.text,
+    minHeight: 50,
+  },
+  submitBtn: {
+    backgroundColor: COLORS.primary,
+    borderRadius: 12,
+    padding: spacing(4),
+    alignItems: "center",
+    marginTop: spacing(6),
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  submitBtnDisabled: {
+    opacity: 0.6,
+  },
+  submitBtnText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: spacing(4),
+  },
+  footerText: {
+    fontSize: 16,
+    color: COLORS.textMuted,
+    marginRight: spacing(2),
+  },
+  footerLink: {
+    fontSize: 16,
+    color: COLORS.primary,
+    fontWeight: "600",
+  },
+});
