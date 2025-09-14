@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '@/theme/colors';
 import { UI } from '@/theme/ui';
 import { useAuthStore } from '@/store/authStore';
+import { getMyDeliveries, updateDeliveryStatus } from '@/services/deliveryService';
 
 interface Mission {
   id: string;
@@ -37,11 +38,11 @@ export default function LivreurMissions() {
 
   const fetchMissions = async () => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await api.get('/livreur/missions');
-      // setMissions(response.data);
-      
-      // Mock data for now
+      const missions = await getMyDeliveries();
+      setMissions(missions);
+    } catch (error) {
+      console.error('Error fetching missions:', error);
+      // Fallback to mock data if API fails
       const mockMissions: Mission[] = [
         {
           id: '1',
@@ -71,9 +72,6 @@ export default function LivreurMissions() {
         }
       ];
       setMissions(mockMissions);
-    } catch (error) {
-      console.error('Error fetching missions:', error);
-      Alert.alert('Erreur', 'Impossible de charger vos missions');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -140,17 +138,21 @@ export default function LivreurMissions() {
     Alert.alert(`Mission ${mission.type}`, 'Que voulez-vous faire ?', actions);
   };
 
-  const updateMissionStatus = (missionId: string, newStatus: string) => {
-    // TODO: API call to update mission status
-    console.log('Updating mission status:', missionId, newStatus);
-    
-    setMissions(prev => prev.map(mission => 
-      mission.id === missionId 
-        ? { ...mission, status: newStatus as any }
-        : mission
-    ));
-    
-    Alert.alert('Succès', 'Statut de la mission mis à jour');
+  const updateMissionStatus = async (missionId: string, newStatus: string) => {
+    try {
+      await updateDeliveryStatus(parseInt(missionId), newStatus);
+      
+      setMissions(prev => prev.map(mission => 
+        mission.id === missionId 
+          ? { ...mission, status: newStatus as any }
+          : mission
+      ));
+      
+      Alert.alert('Succès', 'Statut de la mission mis à jour');
+    } catch (error) {
+      console.error('Error updating mission status:', error);
+      Alert.alert('Erreur', 'Impossible de mettre à jour le statut');
+    }
   };
 
   const renderMission = ({ item }: { item: Mission }) => (

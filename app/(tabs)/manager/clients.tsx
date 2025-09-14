@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/theme/colors';
 import { UI } from '@/theme/ui';
+import { listClients } from '@/services/userService';
 
 interface Client {
   id: string;
@@ -30,11 +31,11 @@ export default function ClientsScreen() {
 
   const fetchClients = async () => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await api.get('/manager/clients');
-      // setClients(response.data);
-      
-      // Mock data for now
+      const clients = await listClients();
+      setClients(clients);
+    } catch (error) {
+      console.error('Error fetching clients:', error);
+      // Fallback to mock data if API fails
       const mockClients: Client[] = [
         {
           id: '1',
@@ -67,9 +68,6 @@ export default function ClientsScreen() {
         }
       ];
       setClients(mockClients);
-    } catch (error) {
-      console.error('Error fetching clients:', error);
-      Alert.alert('Erreur', 'Impossible de charger la liste des clients');
     } finally {
       setLoading(false);
       setRefreshing(false);

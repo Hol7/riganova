@@ -1,4 +1,4 @@
-import { getDeliveries } from '@/store/deliveryStore';
+import { getMyDeliveries } from '@/services/deliveryService';
 import { COLORS } from '@/theme/colors';
 import { spacing } from '@/theme/ui';
 import { useRouter } from 'expo-router';
@@ -22,7 +22,7 @@ export default function ClientDeliveries() {
 
   const fetchDeliveries = async () => {
     try {
-      const data = await getDeliveries();
+      const data = await getMyDeliveries();
       setDeliveries(data);
     } catch (error) {
       console.log(error);

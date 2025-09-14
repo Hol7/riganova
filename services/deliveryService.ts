@@ -1,8 +1,8 @@
 import { api } from "./api";
 
-// POST /deliveries/create (JSON: type_colis, description, adresse_pickup, adresse_dropoff)
+// POST /deliveries/create (Client)
 export async function createDelivery(p: {
-  type_colis: "document"|"repas"|"objet"|"autre";
+  type_colis: "colis"|"document"|"nourriture"|"autre";
   description?: string;
   adresse_pickup: string;
   adresse_dropoff: string;
@@ -11,16 +11,39 @@ export async function createDelivery(p: {
   return data;
 }
 
-// POST /deliveries/{id}/assign (JSON: livreur_id)
+// GET /deliveries/my-deliveries (Client & Livreur)
+export async function getMyDeliveries() {
+  const { data } = await api.get("/deliveries/my-deliveries");
+  return data;
+}
+
+// POST /deliveries/{id}/cancel (Client)
+export async function cancelDelivery(id: number) {
+  const { data } = await api.post(`/deliveries/${id}/cancel`);
+  return data;
+}
+
+// GET /deliveries/all (Manager/Admin)
+export async function getAllDeliveries() {
+  const { data } = await api.get("/deliveries/all");
+  return data;
+}
+
+// POST /deliveries/{id}/assign (Manager/Admin)
 export async function assignDelivery(id: number, livreur_id: number) {
   const { data } = await api.post(`/deliveries/${id}/assign`, { livreur_id });
   return data;
 }
 
-// POST /deliveries/{id}/status (JSON: statut)
-export async function updateDeliveryStatus(id: number, statut:
-  "en_attente"|"en_route_pickup"|"arrive_pickup"|"colis_recupere"|"en_route_livraison"|"livre") {
+// POST /deliveries/{id}/status (Livreur/Manager)
+export async function updateDeliveryStatus(id: number, statut: string) {
   const { data } = await api.post(`/deliveries/${id}/status`, { statut });
+  return data;
+}
+
+// GET /deliveries/{id}/status
+export async function getDeliveryStatus(id: number) {
+  const { data } = await api.get(`/deliveries/${id}/status`);
   return data;
 }
 

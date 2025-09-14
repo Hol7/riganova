@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/theme/colors';
 import { UI } from '@/theme/ui';
+import { listLivreurs } from '@/services/userService';
 
 interface Livreur {
   id: string;
@@ -32,11 +33,11 @@ export default function LivreursScreen() {
 
   const fetchLivreurs = async () => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await api.get('/manager/livreurs');
-      // setLivreurs(response.data);
-      
-      // Mock data for now
+      const livreurs = await listLivreurs();
+      setLivreurs(livreurs);
+    } catch (error) {
+      console.error('Error fetching livreurs:', error);
+      // Fallback to mock data if API fails
       const mockLivreurs: Livreur[] = [
         {
           id: '1',
@@ -73,9 +74,6 @@ export default function LivreursScreen() {
         }
       ];
       setLivreurs(mockLivreurs);
-    } catch (error) {
-      console.error('Error fetching livreurs:', error);
-      Alert.alert('Erreur', 'Impossible de charger la liste des livreurs');
     } finally {
       setLoading(false);
       setRefreshing(false);

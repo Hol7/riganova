@@ -28,7 +28,11 @@ export default function Login() {
       setBusy(true);
       await login(telephone, mot_de_passe);
       
-      // Navigation will be handled by the index.tsx based on auth state and role
+      // Force a redirect after successful login
+      setTimeout(() => {
+        // The index.tsx will handle the role-based redirect
+        router.replace("/");
+      }, 100);
       
     } catch (e: any) {
       console.log("Login error:", e);
