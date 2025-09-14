@@ -27,11 +27,8 @@ export default function Login() {
       setBusy(true);
       await login(telephone, mot_de_passe);
       
-      // Force a redirect after successful login
-      setTimeout(() => {
-        // The index.tsx will handle the role-based redirect
-        router.replace("/");
-      }, 100);
+      // Direct redirect to home after successful login
+      router.replace("/(tabs)/home");
       
     } catch (e: any) {
       console.log("Login error:", e);

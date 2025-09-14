@@ -35,7 +35,8 @@ export default function Register() {
       await registerUser({ nom, email, telephone, mot_de_passe, adresse });
       // ✅ directly log in after registration
       await login(telephone, mot_de_passe);
-      // Navigation will be handled by the index.tsx based on auth state
+      // Direct redirect to home after successful registration
+      router.replace("/(tabs)/home");
     } catch (e: any) {
       console.log("erreur",e);
       alert("Échec de l'inscription: " + (e.response?.data?.detail || "Erreur inconnue"));

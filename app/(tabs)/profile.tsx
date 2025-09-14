@@ -1,16 +1,16 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Alert,
-  StyleSheet,
-} from 'react-native';
+import { useAuthStore } from '@/store/authStore';
+import { COLORS } from '@/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { COLORS } from '@/theme/colors';
-import { useAuthStore } from '@/store/authStore';
+import React from 'react';
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function ProfileScreen() {
   const user = useAuthStore((s) => s.user);
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.text,
+    color: "#000000",
     marginBottom: 4,
   },
   roleBadge: {

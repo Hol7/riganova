@@ -1,9 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: "#ffa704" }}>
+    <Tabs screenOptions={{ headerShown: true, tabBarActiveTintColor: "#ffa704" }}>
       <Tabs.Screen
         name="home"
         options={{
@@ -34,6 +34,13 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="map-outline" size={size} color={color} />,
         }}
       />
+       <Tabs.Screen
+        name="status"
+        options={{
+          title: "Status",
+          tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="loading" size={size} color={color} />,
+        }}
+      />
       <Tabs.Screen
         name="profile"
         options={{
@@ -41,6 +48,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" size={size} color={color} />,
         }}
       />
+      
     </Tabs>
   );
 }

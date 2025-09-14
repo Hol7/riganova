@@ -37,14 +37,14 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   login: async (telephone: string, password: string) => {
     try {
       const response = await authService.login(telephone, password);
-      const { token, user } = response;
+      const { access_token, user } = response;
       
       // Store token securely
-      await SecureStore.setItemAsync('auth_token', token);
+      await SecureStore.setItemAsync('auth_token', access_token);
       
       set({
         user,
-        token,
+        token: access_token,
         isAuthenticated: true,
         isLoading: false,
       });

@@ -27,10 +27,9 @@ export default function Index() {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Redirect href="/(auth)/login" />;
+  if (isAuthenticated) {
+    return <Redirect href="/(tabs)/home" />;
   }
 
-  // Always redirect to home for client role
-  return <Redirect href="/(tabs)/home" />;
+  return <Redirect href="/splash" />;
 }

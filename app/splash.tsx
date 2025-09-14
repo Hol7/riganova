@@ -2,22 +2,49 @@ import { COLORS } from "@/theme/colors";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+import * as SecureStore from 'expo-secure-store';
 
 const { width, height } = Dimensions.get("window");
 
-export default function SplashScreen() {
+export default function Splash() {
   const router = useRouter();
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowWelcome(true);
-    }, 2000);
+    const initializeApp = async () => {
+      try {
+        // Hide the native splash screen
+        await SplashScreen.hideAsync();
+        
+        // Show our custom splash for 2 seconds
+        const timer = setTimeout(async () => {
+          // Check if user has seen onboarding
+          const hasSeenOnboarding = await SecureStore.getItemAsync('hasSeenOnboarding');
+          
+          if (hasSeenOnboarding) {
+            // Go directly to auth check
+            router.replace("/(auth)/login");
+          } else {
+            // Show onboarding
+            setShowWelcome(true);
+          }
+        }, 2000);
 
-    return () => clearTimeout(timer);
+        return () => clearTimeout(timer);
+      } catch (error) {
+        console.log('Splash initialization error:', error);
+        // Fallback to showing welcome
+        setTimeout(() => setShowWelcome(true), 2000);
+      }
+    };
+
+    initializeApp();
   }, []);
 
-  const handleGetStarted = () => {
+  const handleGetStarted = async () => {
+    // Mark onboarding as seen
+    await SecureStore.setItemAsync('hasSeenOnboarding', 'true');
     router.replace("/(auth)/login");
   };
 
