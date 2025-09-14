@@ -1,6 +1,5 @@
 import { useAuthStore } from "@/store/authStore";
 import { COLORS } from "@/theme/colors";
-import { spacing } from "@/theme/ui";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { 
@@ -126,18 +125,18 @@ const loginStyles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     justifyContent: "center",
-    padding: spacing(5),
+    padding: 20,
   },
   header: {
     alignItems: "center",
-    marginBottom: spacing(10),
+    marginBottom: 40,
   },
   logo: {
     fontSize: 36,
     fontWeight: "bold",
     color: COLORS.primary,
     letterSpacing: 1,
-    marginBottom: spacing(2),
+    marginBottom: 8,
   },
   tagline: {
     fontSize: 16,
@@ -145,37 +144,37 @@ const loginStyles = StyleSheet.create({
     textAlign: "center",
   },
   form: {
-    marginBottom: spacing(8),
+    marginBottom: 32,
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     color: COLORS.text,
     textAlign: "center",
-    marginBottom: spacing(2),
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
     color: COLORS.textMuted,
     textAlign: "center",
-    marginBottom: spacing(8),
+    marginBottom: 32,
     lineHeight: 22,
   },
   inputContainer: {
-    marginBottom: spacing(5),
+    marginBottom: 20,
   },
   inputLabel: {
     fontSize: 16,
     fontWeight: "500",
     color: COLORS.text,
-    marginBottom: spacing(2),
+    marginBottom: 8,
   },
   input: {
     borderWidth: 1,
     borderColor: COLORS.border,
     backgroundColor: COLORS.surface,
     borderRadius: 12,
-    padding: spacing(4),
+    padding: 16,
     fontSize: 16,
     color: COLORS.text,
     minHeight: 50,
@@ -183,10 +182,10 @@ const loginStyles = StyleSheet.create({
   submitBtn: {
     backgroundColor: COLORS.primary,
     borderRadius: 12,
-    padding: spacing(4),
+    padding: 16,
     alignItems: "center",
-    marginTop: spacing(4),
-    marginBottom: spacing(4),
+    marginTop: 16,
+    marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -203,7 +202,7 @@ const loginStyles = StyleSheet.create({
   },
   linkBtn: {
     alignItems: "center",
-    paddingVertical: spacing(2),
+    paddingVertical: 8,
   },
   linkText: {
     fontSize: 16,
@@ -214,12 +213,12 @@ const loginStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: spacing(4),
+    marginTop: 16,
   },
   footerText: {
     fontSize: 16,
     color: COLORS.textMuted,
-    marginRight: spacing(2),
+    marginRight: 8,
   },
   footerLink: {
     fontSize: 16,

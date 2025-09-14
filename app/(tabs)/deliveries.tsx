@@ -1,34 +1,47 @@
-import { getMyDeliveries } from '@/services/deliveryService';
+import { cancelDelivery, getMyDeliveries } from '@/services/deliveryService';
 import { COLORS } from '@/theme/colors';
 import { spacing } from '@/theme/ui';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { 
-  FlatList, 
-  StyleSheet, 
-  Text, 
-  TouchableOpacity, 
-  View, 
-  ActivityIndicator,
-  RefreshControl,
-  ScrollView
+import {
+    ActivityIndicator,
+    FlatList,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
 export default function ClientDeliveries() {
-  const [deliveries, setDeliveries] = useState([]);
+  const [deliveries, setDeliveries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
+
 
   const fetchDeliveries = async () => {
     try {
       const data = await getMyDeliveries();
       setDeliveries(data);
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching deliveries:', error);
     } finally {
       setLoading(false);
       setRefreshing(false);
+    }
+  };
+
+  const handleCancelDelivery = async (deliveryId: number) => {
+    try {
+      await cancelDelivery(deliveryId);
+      // Refresh the list after cancellation
+      fetchDeliveries();
+      alert('Livraison annulée avec succès');
+    } catch (error) {
+      console.error('Error canceling delivery:', error);
+      alert('Erreur lors de l\'annulation');
     }
   };
 
@@ -78,7 +91,7 @@ export default function ClientDeliveries() {
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => router.push(`/client/delivery/${item.id}`)}
+      onPress={() => router.push(`/(tabs)/status?id=${item.id}`)}
       activeOpacity={0.7}
     >
       <View style={styles.cardHeader}>
@@ -142,7 +155,7 @@ export default function ClientDeliveries() {
       </Text>
       <TouchableOpacity 
         style={styles.emptyButton}
-        onPress={() => router.push('/(tabs)/client/home')}
+        onPress={() => router.push('/(tabs)/home')}
       >
         <Text style={styles.emptyButtonText}>Créer une livraison</Text>
       </TouchableOpacity>
@@ -189,28 +202,28 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bg,
   },
   header: {
-    padding: spacing(5),
-    paddingBottom: spacing(3),
+    padding: 16, //spacing(5),
+    paddingBottom: 16, //spacing(3),
   },
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
     color: COLORS.text,
-    marginBottom: spacing(1),
+    marginBottom: 16, //spacing(1),
   },
   headerSubtitle: {
     fontSize: 16,
     color: COLORS.textMuted,
   },
   listContainer: {
-    padding: spacing(5),
+    padding: 16, //spacing(5),
     paddingTop: 0,
   },
   card: {
     backgroundColor: COLORS.surface,
     borderRadius: 16,
-    padding: spacing(4),
-    marginBottom: spacing(4),
+    padding: spacing.lg,
+    marginBottom: 16, //spacing(4),
     borderWidth: 1,
     borderColor: COLORS.border,
     shadowColor: '#000',
@@ -223,7 +236,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: spacing(3),
+    marginBottom: 16, //spacing(3),
   },
   typeContainer: {
     flexDirection: 'row',
@@ -231,7 +244,7 @@ const styles = StyleSheet.create({
   },
   typeIcon: {
     fontSize: 20,
-    marginRight: spacing(2),
+    marginRight: 16, //spacing(2),
   },
   typeText: {
     fontSize: 16,
@@ -239,8 +252,8 @@ const styles = StyleSheet.create({
     color: COLORS.text,
   },
   statusBadge: {
-    paddingHorizontal: spacing(3),
-    paddingVertical: spacing(1),
+    paddingHorizontal: spacing.md,
+    paddingVertical: 16, //spacing(1),
     borderRadius: 12,
   },
   statusText: {
@@ -249,16 +262,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   addressContainer: {
-    marginBottom: spacing(3),
+    marginBottom: 16, //spacing(3),
   },
   addressRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: spacing(2),
+    marginBottom: 16, //spacing(2),
   },
   addressIcon: {
     fontSize: 16,
-    marginRight: spacing(2),
+    marginRight: 16, //spacing(2),
     marginTop: 2,
   },
   addressContent: {
@@ -268,7 +281,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: COLORS.textMuted,
-    marginBottom: spacing(1),
+    marginBottom: 16, //spacing(1),
   },
   addressText: {
     fontSize: 14,
@@ -277,9 +290,9 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     backgroundColor: COLORS.bg,
-    padding: spacing(3),
+    padding: 16, //spacing(3),
     borderRadius: 8,
-    marginBottom: spacing(3),
+    marginBottom: 16, //spacing(3),
   },
   descriptionText: {
     fontSize: 14,
@@ -290,7 +303,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: spacing(2),
+    paddingTop: 16, //spacing(2),
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },
@@ -310,7 +323,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bg,
   },
   loadingText: {
-    marginTop: spacing(4),
+    marginTop: 16, //spacing(4),
     fontSize: 16,
     color: COLORS.textMuted,
   },
@@ -318,29 +331,29 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: spacing(8),
+    padding: 16, //spacing(8),
   },
   emptyIcon: {
     fontSize: 64,
-    marginBottom: spacing(4),
+    marginBottom: 16, //spacing(4),
   },
   emptyTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     color: COLORS.text,
-    marginBottom: spacing(2),
+    marginBottom: 16, //spacing(2),
   },
   emptyText: {
     fontSize: 16,
     color: COLORS.textMuted,
     textAlign: 'center',
     lineHeight: 22,
-    marginBottom: spacing(6),
+    marginBottom: 16, //spacing(6),
   },
   emptyButton: {
     backgroundColor: COLORS.primary,
-    paddingHorizontal: spacing(6),
-    paddingVertical: spacing(3),
+    paddingHorizontal: 16, //spacing(6),
+    paddingVertical: 16, //spacing(3),
     borderRadius: 12,
   },
   emptyButtonText: {

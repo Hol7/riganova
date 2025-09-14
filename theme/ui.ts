@@ -11,20 +11,26 @@ export const typography = {
   small: { fontSize: 12, lineHeight: 16, color: COLORS.textMuted } as TextStyle,
 };
 
-export const spacing = (n:number) => 4 * n; // 4px grid (8/12 works too)
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+};
 
 /** Reusable screen + form styles */
 export const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: COLORS.bg,
-    padding: spacing(5),
+    padding: spacing.lg,
     justifyContent: "center",
     alignItems: "center",
   } as ViewStyle,
   
   centeredStack: { 
-    gap: spacing(3), 
+    gap: spacing.md, 
     alignItems: "stretch" 
   } as ViewStyle,
   
@@ -37,10 +43,10 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     backgroundColor: COLORS.surface,
-    paddingVertical: spacing(3),
-    paddingHorizontal: spacing(4),
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
     borderRadius: 12,
-    marginBottom: spacing(3),
+    marginBottom: spacing.md,
     fontSize: 16,
     color: COLORS.text,
     width: "100%",
@@ -49,12 +55,12 @@ export const styles = StyleSheet.create({
 
   primaryBtn: {
     backgroundColor: COLORS.primary,
-    paddingVertical: spacing(4),
-    paddingHorizontal: spacing(6),
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.xl,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: spacing(4),
+    marginTop: spacing.lg,
     width: "100%",
     maxWidth: 400,
     minHeight: 50,
@@ -78,9 +84,9 @@ export const styles = StyleSheet.create({
   } as TextStyle,
   
   linkBtn: { 
-    marginTop: spacing(3), 
+    marginTop: spacing.md, 
     alignItems: "center",
-    paddingVertical: spacing(2),
+    paddingVertical: spacing.sm,
   } as ViewStyle,
   
   link: { 

@@ -1,78 +1,124 @@
-import { loginUser } from "@/services/authService";
-import * as SecureStore from "expo-secure-store";
-import { create } from "zustand";
+import { create } from 'zustand';
+import * as SecureStore from 'expo-secure-store';
+import { authService } from '@/services/authService';
 
-type Role = "client" | "livreur" | "manager" | "admin";
+interface User {
+  id: number;
+  nom: string;
+  prenom: string;
+  telephone: string;
+  email?: string;
+  adresse?: string;
+}
 
 interface AuthState {
+  user: User | null;
   token: string | null;
-  user: any | null;
-  role: Role | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
-interface State extends AuthState {
-  login: (telephone: string, mot_de_passe: string) => Promise<void>;
+interface AuthActions {
+  login: (telephone: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  setAuthState: (state: Partial<AuthState>) => void;
-  me: any | null; // Keep for backward compatibility
+  setUser: (user: User | null) => void;
+  setToken: (token: string | null) => void;
+  checkAuth: () => Promise<void>;
 }
 
-export const useAuthStore = create<State>((set, get) => ({
-  isLoading: true,
-  isAuthenticated: false,
-  token: null,
-  role: null,
-  me: null,
+type AuthStore = AuthState & AuthActions;
+
+export const useAuthStore = create<AuthStore>((set, get) => ({
   user: null,
+  token: null,
+  isAuthenticated: false,
+  isLoading: true,
 
-  setAuthState: (newState) => {
-    set((state) => ({
-      ...state,
-      ...newState,
-      me: newState.user || state.me, // Keep me in sync with user
-    }));
-  },
-
-  login: async (telephone, mot_de_passe) => {
+  login: async (telephone: string, password: string) => {
     try {
-      set({ isLoading: true });
-      const { access_token, user } = await loginUser(telephone, mot_de_passe);
+      const response = await authService.login(telephone, password);
+      const { token, user } = response;
       
-      console.log("Login successful, setting auth state:", { access_token, user });
+      // Store token securely
+      await SecureStore.setItemAsync('auth_token', token);
       
-      // Store in secure storage
-      await SecureStore.setItemAsync("access_token", access_token);
-      await SecureStore.setItemAsync("user_data", JSON.stringify(user));
-      
-      const newState = { 
-        token: access_token, 
-        me: user, 
-        user: user,
-        role: user.role, 
+      set({
+        user,
+        token,
         isAuthenticated: true,
-        isLoading: false
-      };
-      
-      console.log("Setting auth state to:", newState);
-      set(newState);
+        isLoading: false,
+      });
     } catch (error) {
-      set({ isLoading: false });
+      set({
+        user: null,
+        token: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
       throw error;
     }
   },
 
   logout: async () => {
-    await SecureStore.deleteItemAsync("access_token");
-    await SecureStore.deleteItemAsync("user_data");
-    set({ 
-      isAuthenticated: false, 
-      token: null, 
-      role: null, 
-      me: null, 
+    try {
+      // Remove token from secure storage
+      await SecureStore.deleteItemAsync('auth_token');
+    } catch (error) {
+      console.log('Error removing token:', error);
+    }
+    
+    set({
       user: null,
-      isLoading: false
+      token: null,
+      isAuthenticated: false,
+      isLoading: false,
     });
+  },
+
+  setUser: (user: User | null) => {
+    set({ user });
+  },
+
+  setToken: (token: string | null) => {
+    set({ token, isAuthenticated: !!token });
+  },
+
+  checkAuth: async () => {
+    try {
+      set({ isLoading: true });
+      
+      // Get token from secure storage
+      const token = await SecureStore.getItemAsync('auth_token');
+      
+      if (!token) {
+        set({
+          user: null,
+          token: null,
+          isAuthenticated: false,
+          isLoading: false,
+        });
+        return;
+      }
+
+      // Verify token and get user info
+      const user = await authService.getCurrentUser(token);
+      
+      set({
+        user,
+        token,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+    } catch (error) {
+      console.log('Auth check failed:', error);
+      // Clear invalid token
+      await SecureStore.deleteItemAsync('auth_token');
+      set({
+        user: null,
+        token: null,
+        isAuthenticated: false,
+        isLoading: false,
+      });
+    }
   },
 }));

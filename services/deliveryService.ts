@@ -23,9 +23,9 @@ export async function cancelDelivery(id: number) {
   return data;
 }
 
-// GET /deliveries/all (Manager/Admin)
+// GET /deliveries/history (Manager/Admin gets all, others get their own)
 export async function getAllDeliveries() {
-  const { data } = await api.get("/deliveries/all");
+  const { data } = await api.get("/deliveries/history");
   return data;
 }
 

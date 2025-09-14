@@ -15,7 +15,7 @@ export default function ForgetPassword() {
       setBusy(true);
       await forgetPassword(email);
       alert("Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.");
-      router.replace("/auth/login");
+      router.replace("/(auth)/login");
     } catch (e: any) {
       alert("Erreur: " + (e.response?.data?.detail || "Impossible de réinitialiser"));
     } finally {
