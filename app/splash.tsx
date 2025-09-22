@@ -1,9 +1,9 @@
 import { COLORS } from "@/theme/colors";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
-import * as SplashScreen from "expo-splash-screen";
 import * as SecureStore from 'expo-secure-store';
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect, useState } from "react";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -63,10 +63,17 @@ export default function Splash() {
     <View style={styles.welcomeContainer}>
       <View style={styles.content}>
         <View style={styles.welcomeHeader}>
-          <Text style={styles.welcomeTitle}>Bienvenue sur RIGANOVA</Text>
-          <Text style={styles.welcomeSubtitle}>
+          <Text style={styles.welcomeTitle}>Bienvenue sur</Text>
+          <Text style={styles.welcomeTitle1}> RIGANOVA</Text>
+          {/* <img src="../assets/images/logo.png" alt="" /> */}
+          {/* <Image
+            source={require('../assets/images/icon.png')}
+            style={{ width: 100, height: 100 }}
+            contentFit="cover"
+          /> */}
+          {/* <Text style={styles.welcomeSubtitle}>
             La solution de livraison à moto la plus rapide de votre région
-          </Text>
+          </Text> */}
         </View>
 
         <View style={styles.featuresContainer}>
@@ -142,11 +149,18 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   welcomeTitle: {
-    fontSize: 32,
+    fontSize: 20,
+    fontWeight: "normal",
+    color: "#FFFFFF",
+    textAlign: "center",
+    marginBottom: 2,
+  },
+  welcomeTitle1: {
+    fontSize: 34,
     fontWeight: "bold",
     color: "#FFFFFF",
     textAlign: "center",
-    marginBottom: 15,
+    // marginBottom: 15,
   },
   welcomeSubtitle: {
     fontSize: 18,
@@ -162,23 +176,30 @@ const styles = StyleSheet.create({
   },
   feature: {
     alignItems: "center",
-    marginVertical: 20,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 8,
+    backgroundColor: COLORS.surface,
+    borderRadius: 12,
+    padding: 10,
+    marginVertical: 4,
     paddingHorizontal: 20,
   },
   featureIcon: {
-    fontSize: 40,
+    fontSize: 20,
     marginBottom: 10,
   },
   featureTitle: {
     fontSize: 20,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: "#000000",
     marginBottom: 8,
     textAlign: "center",
   },
   featureText: {
     fontSize: 16,
-    color: "#FFFFFF",
+    color: "#000000",
     opacity: 0.8,
     textAlign: "center",
     lineHeight: 22,

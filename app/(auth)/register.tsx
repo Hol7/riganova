@@ -3,16 +3,16 @@ import { useAuthStore } from "@/store/authStore";
 import { COLORS } from "@/theme/colors";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { 
-  ActivityIndicator, 
-  ScrollView, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  View,
-  StyleSheet,
+import {
+  ActivityIndicator,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 export default function Register() {
@@ -52,17 +52,17 @@ export default function Register() {
     >
       <ScrollView contentContainerStyle={registerStyles.scrollContainer}>
         {/* Header */}
-        <View style={registerStyles.header}>
+        {/* <View style={registerStyles.header}>
           <Text style={registerStyles.logo}>RIGANOVA</Text>
           <Text style={registerStyles.tagline}>Livraison à moto rapide</Text>
-        </View>
+        </View> */}
 
         {/* Form */}
         <View style={registerStyles.form}>
           <Text style={registerStyles.title}>Créer un compte</Text>
-          <Text style={registerStyles.subtitle}>
+          {/* <Text style={registerStyles.subtitle}>
             Rejoignez RIGANOVA et commencez à utiliser nos services de livraison
-          </Text>
+          </Text> */}
 
           <View style={registerStyles.inputContainer}>
             <Text style={registerStyles.inputLabel}>👤 Nom complet</Text>
@@ -180,7 +180,7 @@ const registerStyles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.text,
     textAlign: "center",
-    marginBottom: 8,
+    marginBottom: 18,
   },
   subtitle: {
     fontSize: 16,
@@ -190,13 +190,13 @@ const registerStyles = StyleSheet.create({
     lineHeight: 22,
   },
   inputContainer: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
   inputLabel: {
-    fontSize: 16,
-    fontWeight: "500",
+    fontSize: 14,
+    fontWeight: "400",
     color: COLORS.text,
-    marginBottom: 8,
+    marginBottom: 4,
   },
   input: {
     borderWidth: 1,

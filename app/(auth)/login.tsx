@@ -2,16 +2,16 @@ import { useAuthStore } from "@/store/authStore";
 import { COLORS } from "@/theme/colors";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { 
-  ActivityIndicator, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  View, 
-  StyleSheet,
+import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  ScrollView
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from "react-native";
 
 export default function Login() {
@@ -45,10 +45,10 @@ export default function Login() {
     >
       <ScrollView contentContainerStyle={loginStyles.scrollContainer}>
         {/* Header */}
-        <View style={loginStyles.header}>
+        {/* <View style={loginStyles.header}>
           <Text style={loginStyles.logo}>RIGANOVA</Text>
           <Text style={loginStyles.tagline}>Livraison à moto rapide</Text>
-        </View>
+        </View> */}
 
         {/* Form */}
         <View style={loginStyles.form}>
@@ -123,6 +123,7 @@ const loginStyles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     padding: 20,
+    backgroundColor: COLORS.bg,
   },
   header: {
     alignItems: "center",
