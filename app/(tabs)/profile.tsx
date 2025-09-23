@@ -2,9 +2,11 @@ import { useAuthStore } from '@/store/authStore';
 import { COLORS } from '@/theme/colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
+  Linking,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,6 +18,38 @@ export default function ProfileScreen() {
   const user = useAuthStore((s) => s.user);
   const logout = useAuthStore((s) => s.logout);
   const router = useRouter();
+  const [helpVisible, setHelpVisible] = useState(false);
+
+  const handleCall = async () => {
+    const phone = '+242050443223';
+    const url = `tel:${phone}`;
+    try {
+      const supported = await Linking.canOpenURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert("Appel non pris en charge", "Impossible d'ouvrir l'application d'appel.");
+      }
+    } catch (e) {
+      Alert.alert('Erreur', "Une erreur est survenue lors de l'ouverture de l'appel.");
+    }
+  };
+
+  const handleWhatsApp = async () => {
+    const phone = '242068686616'; // WhatsApp requires international format without '+'
+    const schemeUrl = `whatsapp://send?phone=${phone}`;
+    const webUrl = `https://wa.me/${phone}`;
+    try {
+      const supported = await Linking.canOpenURL(schemeUrl);
+      if (supported) {
+        await Linking.openURL(schemeUrl);
+      } else {
+        await Linking.openURL(webUrl);
+      }
+    } catch (e) {
+      Alert.alert('WhatsApp indisponible', "Impossible d'ouvrir WhatsApp sur cet appareil.");
+    }
+  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -52,7 +86,7 @@ export default function ProfileScreen() {
       icon: 'help-circle-outline',
       title: 'Aide & Support',
       subtitle: 'Obtenir de l\'aide',
-      onPress: () => console.log('Help')
+      onPress: () => setHelpVisible(true)
     },
     {
       icon: 'information-circle-outline',
@@ -128,6 +162,33 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         ))}
       </View>
+
+      {/* Help & Support Modal */}
+      <Modal
+        animationType="slide"
+        transparent
+        visible={helpVisible}
+        onRequestClose={() => setHelpVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Aide & Support</Text>
+            <View style={styles.modalActions}>
+              <TouchableOpacity style={styles.actionBtn} onPress={handleCall}>
+                <Ionicons name="call" size={18} color="white" />
+                <Text style={styles.actionText}>Appeler +242 05 044 3223</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#25D366' }]} onPress={handleWhatsApp}>
+                <Ionicons name="logo-whatsapp" size={18} color="white" />
+                <Text style={styles.actionText}>WhatsApp +242 06 868 6616</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={() => setHelpVisible(false)} style={[styles.actionBtn, { backgroundColor: '#E0E0E0' }]}>
+              <Text style={[styles.actionText, { color: '#000' }]}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
 
       {/* Logout Button */}
       <View style={styles.logoutContainer}>
@@ -257,6 +318,45 @@ const styles = StyleSheet.create({
   optionSubtitle: {
     fontSize: 14,
     color: COLORS.textMuted,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  modalCard: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    padding: 16,
+    paddingBottom: 24,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: COLORS.text,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  modalActions: {
+    gap: 12,
+    marginBottom: 8,
+  },
+  actionBtn: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    marginBottom: 10,
+  },
+  actionText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
   logoutContainer: {
     padding: 16,
