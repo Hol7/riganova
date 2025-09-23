@@ -2,7 +2,7 @@ import { api } from "./api";
 
 // POST /deliveries/create (Client)
 export async function createDelivery(p: {
-  type_colis: "colis"|"document"|"nourriture"|"autre";
+  type_colis: "colis"|"document"|"repas"|"autre";
   description?: string;
   adresse_pickup: string;
   adresse_dropoff: string;
