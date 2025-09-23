@@ -40,6 +40,6 @@ export async function listLivreurs(): Promise<User[]> {
 
 // GET /zones - Get all zones
 export async function getZones(): Promise<Zone[]> {
-  const { data } = await api.get("/zones");
+  const { data } = await api.get("/zones/public");
   return data;
 }
